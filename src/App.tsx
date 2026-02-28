@@ -111,6 +111,14 @@ const INITIAL_SPEED = 8;
 const SPEED_INCREMENT = 0.002;
 
 // --- Types ---
+interface Landmark {
+  id: string;
+  x: number;
+  y: number;
+  type: 'tower' | 'ruin' | 'felucca' | 'pyramid' | 'building' | 'temple';
+  side: 'left' | 'right';
+}
+
 interface Track {
   id: string;
   name: string;
@@ -124,6 +132,7 @@ interface Track {
   speedIncrement: number;
   accentColor: string;
   bgImage?: string;
+  landmarkTypes: Landmark['type'][];
 }
 
 interface CarCustomization {
@@ -139,8 +148,8 @@ interface CarCustomization {
 const TRACKS: Track[] = [
   {
     id: 'city',
-    name: 'وسط البلد',
-    description: 'سباق في زحمة القاهرة وكوبري أكتوبر.',
+    name: 'القاهرة الفاطمية',
+    description: 'سباق جنب برج القاهرة وخان الخليلي.',
     bgColor: '#18181b',
     roadColor: '#18181b',
     laneColor: '#3f3f46',
@@ -149,12 +158,13 @@ const TRACKS: Track[] = [
     initialSpeed: 8,
     speedIncrement: 0.002,
     accentColor: '#3b82f6',
-    bgImage: 'https://images.unsplash.com/photo-1553913861-c0fddf2619ee?q=80&w=1000&auto=format&fit=crop' // Cairo/Downtown
+    bgImage: 'https://images.unsplash.com/photo-1553913861-c0fddf2619ee?q=80&w=1000&auto=format&fit=crop',
+    landmarkTypes: ['tower', 'building']
   },
   {
     id: 'desert',
-    name: 'طريق الهرم',
-    description: 'جري في الصحراء جنب الأهرامات العظيمة.',
+    name: 'آثار الإسكندرية',
+    description: 'جري وسط الآثار الرومانية في قلب الصحراء.',
     bgColor: '#451a03',
     roadColor: '#78350f',
     laneColor: '#f59e0b',
@@ -163,12 +173,13 @@ const TRACKS: Track[] = [
     initialSpeed: 11,
     speedIncrement: 0.003,
     accentColor: '#fbbf24',
-    bgImage: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?q=80&w=1000&auto=format&fit=crop' // Pyramids
+    bgImage: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?q=80&w=1000&auto=format&fit=crop',
+    landmarkTypes: ['ruin', 'pyramid']
   },
   {
     id: 'neon',
-    name: 'الساحل الشمالي',
-    description: 'طريق الساحل بالليل مع أنوار الحفلات.',
+    name: 'نيل المستقبل',
+    description: 'نيل سايبر وفلوكة بتنور في الضلمة.',
     bgColor: '#020617',
     roadColor: '#0f172a',
     laneColor: '#22d3ee',
@@ -177,7 +188,8 @@ const TRACKS: Track[] = [
     initialSpeed: 14,
     speedIncrement: 0.004,
     accentColor: '#a855f7',
-    bgImage: 'https://images.unsplash.com/photo-1568051243851-f9b136146e97?q=80&w=1000&auto=format&fit=crop' // Alexandria/Coast
+    bgImage: 'https://images.unsplash.com/photo-1568051243851-f9b136146e97?q=80&w=1000&auto=format&fit=crop',
+    landmarkTypes: ['felucca', 'temple']
   }
 ];
 
@@ -188,6 +200,7 @@ interface GameObject {
   height: number;
   color: string;
   lane: number;
+  type?: 'pottery' | 'stall' | 'chariot';
 }
 
 export default function App() {
@@ -219,6 +232,7 @@ export default function App() {
     lane: 1
   });
   const obstaclesRef = useRef<GameObject[]>([]);
+  const landmarksRef = useRef<Landmark[]>([]);
   const roadOffsetRef = useRef(0);
   const frameIdRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
@@ -282,6 +296,7 @@ export default function App() {
     setSpeed(speedRef.current);
     
     obstaclesRef.current = [];
+    landmarksRef.current = [];
     playerRef.current.lane = 1;
     playerRef.current.x = LANE_WIDTH + (LANE_WIDTH - PLAYER_WIDTH) / 2;
     playerRef.current.color = customization.color;
@@ -334,20 +349,45 @@ export default function App() {
       obs.y += currentSpeed;
     });
 
+    // Move landmarks
+    landmarksRef.current.forEach(lm => {
+      lm.y += currentSpeed;
+    });
+
     // Remove off-screen obstacles
     obstaclesRef.current = obstaclesRef.current.filter(obs => obs.y < CANVAS_HEIGHT);
+    // Remove off-screen landmarks
+    landmarksRef.current = landmarksRef.current.filter(lm => lm.y < CANVAS_HEIGHT);
 
     // Spawn new obstacles
     if (obstaclesRef.current.length === 0 || 
         (obstaclesRef.current[obstaclesRef.current.length - 1].y > 200 && Math.random() < 0.02)) {
       const lane = Math.floor(Math.random() * 3);
+      const types: GameObject['type'][] = ['pottery', 'stall', 'chariot'];
+      const type = types[Math.floor(Math.random() * types.length)];
+      
       obstaclesRef.current.push({
         x: lane * LANE_WIDTH + (LANE_WIDTH - OBSTACLE_WIDTH) / 2,
         y: -OBSTACLE_HEIGHT,
         width: OBSTACLE_WIDTH,
         height: OBSTACLE_HEIGHT,
         color: track.obstacleColor,
-        lane
+        lane,
+        type
+      });
+    }
+
+    // Spawn new landmarks
+    if (landmarksRef.current.length === 0 || 
+        (landmarksRef.current[landmarksRef.current.length - 1].y > 400 && Math.random() < 0.01)) {
+      const side = Math.random() > 0.5 ? 'left' : 'right';
+      const type = track.landmarkTypes[Math.floor(Math.random() * track.landmarkTypes.length)];
+      landmarksRef.current.push({
+        id: Math.random().toString(),
+        x: side === 'left' ? 20 : CANVAS_WIDTH - 80,
+        y: -200,
+        type,
+        side
       });
     }
 
@@ -423,6 +463,104 @@ export default function App() {
     ctx.lineWidth = 8;
     ctx.strokeRect(4, 0, CANVAS_WIDTH - 8, CANVAS_HEIGHT);
 
+    // Draw Landmarks
+    landmarksRef.current.forEach(lm => {
+      ctx.save();
+      ctx.translate(lm.x, lm.y);
+      
+      if (lm.type === 'tower') {
+        // Cairo Tower
+        ctx.fillStyle = '#71717a';
+        ctx.fillRect(20, 0, 20, 150);
+        ctx.fillStyle = '#3f3f46';
+        ctx.beginPath();
+        ctx.arc(30, 10, 15, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#22d3ee';
+        ctx.fillRect(28, -10, 4, 10); // Antenna
+      } else if (lm.type === 'pyramid') {
+        // Giza Pyramids (Multiple)
+        ctx.fillStyle = '#d97706';
+        // Main Pyramid
+        ctx.beginPath();
+        ctx.moveTo(0, 100);
+        ctx.lineTo(40, 0);
+        ctx.lineTo(80, 100);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+        ctx.stroke();
+        // Smaller Pyramid behind
+        ctx.fillStyle = '#b45309';
+        ctx.beginPath();
+        ctx.moveTo(-20, 100);
+        ctx.lineTo(10, 40);
+        ctx.lineTo(40, 100);
+        ctx.closePath();
+        ctx.fill();
+      } else if (lm.type === 'temple') {
+        // Futuristic Neon Temple
+        ctx.strokeStyle = '#a855f7';
+        ctx.lineWidth = 2;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = '#a855f7';
+        // Pylon (Entrance)
+        ctx.strokeRect(0, 20, 30, 80);
+        ctx.strokeRect(50, 20, 30, 80);
+        // Connecting Beam
+        ctx.beginPath();
+        ctx.moveTo(30, 30);
+        ctx.lineTo(50, 30);
+        ctx.stroke();
+        // Glowing Obelisk
+        ctx.fillStyle = 'rgba(168, 85, 247, 0.3)';
+        ctx.beginPath();
+        ctx.moveTo(35, 100);
+        ctx.lineTo(40, 0);
+        ctx.lineTo(45, 100);
+        ctx.fill();
+        ctx.stroke();
+      } else if (lm.type === 'ruin') {
+        // Roman Ruin (Column)
+        ctx.fillStyle = '#e5e7eb';
+        ctx.fillRect(10, 0, 15, 80);
+        ctx.fillRect(5, -5, 25, 10); // Top
+        ctx.fillRect(5, 75, 25, 10); // Base
+      } else if (lm.type === 'felucca') {
+        // Futuristic Felucca
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.moveTo(0, 40);
+        ctx.lineTo(60, 40);
+        ctx.lineTo(50, 55);
+        ctx.lineTo(10, 55);
+        ctx.closePath();
+        ctx.fill();
+        // Neon Sail
+        ctx.strokeStyle = '#22d3ee';
+        ctx.lineWidth = 2;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#22d3ee';
+        ctx.beginPath();
+        ctx.moveTo(30, 40);
+        ctx.lineTo(30, 0);
+        ctx.lineTo(10, 35);
+        ctx.stroke();
+      } else if (lm.type === 'building') {
+        // Khan el-Khalili style building
+        ctx.fillStyle = '#a16207';
+        ctx.fillRect(0, 0, 60, 100);
+        ctx.fillStyle = '#713f12';
+        ctx.fillRect(10, 20, 15, 20); // Window
+        ctx.fillRect(35, 20, 15, 20); // Window
+        ctx.beginPath();
+        ctx.arc(30, 0, 20, Math.PI, 0); // Dome
+        ctx.fill();
+      }
+      
+      ctx.restore();
+    });
+
     // Add some glow for Neon track
     if (track.id === 'neon') {
       ctx.shadowBlur = 15;
@@ -495,18 +633,64 @@ export default function App() {
 
     // Draw Obstacles
     obstaclesRef.current.forEach(obs => {
-      ctx.fillStyle = obs.color;
-      roundRect(ctx, obs.x, obs.y, obs.width, obs.height, 8);
-      ctx.fill();
-      // Windows
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-      ctx.fillRect(obs.x + 10, obs.y + obs.height - 35, obs.width - 20, 20);
-      // Wheels
-      ctx.fillStyle = '#000';
-      ctx.fillRect(obs.x - 5, obs.y + 10, 5, 20);
-      ctx.fillRect(obs.x + obs.width, obs.y + 10, 5, 20);
-      ctx.fillRect(obs.x - 5, obs.y + obs.height - 30, 5, 20);
-      ctx.fillRect(obs.x + obs.width, obs.y + obs.height - 30, 5, 20);
+      ctx.save();
+      ctx.translate(obs.x, obs.y);
+      
+      if (obs.type === 'pottery') {
+        // Ancient Pottery (Qolla)
+        ctx.fillStyle = '#a8a29e'; // Stone/Clay
+        ctx.beginPath();
+        ctx.moveTo(10, 80);
+        ctx.bezierCurveTo(0, 80, 0, 40, 25, 30); // Base to neck
+        ctx.lineTo(25, 10); // Neck
+        ctx.lineTo(35, 10);
+        ctx.lineTo(35, 30);
+        ctx.bezierCurveTo(60, 40, 60, 80, 50, 80);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+        ctx.stroke();
+      } else if (obs.type === 'stall') {
+        // Market Stall (Farsha)
+        ctx.fillStyle = '#78350f'; // Wood
+        ctx.fillRect(0, 60, 60, 20); // Table
+        ctx.fillStyle = '#ef4444'; // Red canopy
+        ctx.beginPath();
+        ctx.moveTo(-5, 60);
+        ctx.lineTo(30, 20);
+        ctx.lineTo(65, 60);
+        ctx.closePath();
+        ctx.fill();
+        // Items on stall
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.arc(15, 55, 5, 0, Math.PI * 2);
+        ctx.arc(45, 55, 5, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (obs.type === 'chariot') {
+        // Chariot
+        ctx.fillStyle = '#d97706'; // Golden wood
+        ctx.fillRect(10, 40, 40, 30); // Body
+        ctx.fillStyle = '#000';
+        ctx.beginPath();
+        ctx.arc(10, 70, 10, 0, Math.PI * 2); // Wheel
+        ctx.arc(50, 70, 10, 0, Math.PI * 2); // Wheel
+        ctx.fill();
+        // Spear/Pole
+        ctx.strokeStyle = '#78350f';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(30, 40);
+        ctx.lineTo(30, 0);
+        ctx.stroke();
+      } else {
+        // Fallback generic
+        ctx.fillStyle = obs.color;
+        roundRect(ctx, 0, 0, obs.width, obs.height, 8);
+        ctx.fill();
+      }
+      
+      ctx.restore();
     });
   };
 
