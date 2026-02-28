@@ -139,45 +139,45 @@ interface CarCustomization {
 const TRACKS: Track[] = [
   {
     id: 'city',
-    name: 'City Sprint',
-    description: 'Standard urban race through skyscrapers.',
-    bgColor: '#18181b', // zinc-900
+    name: 'وسط البلد',
+    description: 'سباق في زحمة القاهرة وكوبري أكتوبر.',
+    bgColor: '#18181b',
     roadColor: '#18181b',
-    laneColor: '#3f3f46', // zinc-700
-    edgeColor: '#71717a', // zinc-500
-    obstacleColor: '#ef4444', // red-500
+    laneColor: '#3f3f46',
+    edgeColor: '#71717a',
+    obstacleColor: '#ef4444',
     initialSpeed: 8,
     speedIncrement: 0.002,
-    accentColor: '#3b82f6', // blue-500
-    bgImage: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=1000&auto=format&fit=crop' // Cityscape
+    accentColor: '#3b82f6',
+    bgImage: 'https://images.unsplash.com/photo-1553913861-c0fddf2619ee?q=80&w=1000&auto=format&fit=crop' // Cairo/Downtown
   },
   {
     id: 'desert',
-    name: 'Desert Drift',
-    description: 'High-speed chase through the dunes.',
-    bgColor: '#451a03', // orange-950
-    roadColor: '#78350f', // amber-900
-    laneColor: '#f59e0b', // amber-500
-    edgeColor: '#d97706', // amber-600
-    obstacleColor: '#991b1b', // red-900
+    name: 'طريق الهرم',
+    description: 'جري في الصحراء جنب الأهرامات العظيمة.',
+    bgColor: '#451a03',
+    roadColor: '#78350f',
+    laneColor: '#f59e0b',
+    edgeColor: '#d97706',
+    obstacleColor: '#991b1b',
     initialSpeed: 11,
     speedIncrement: 0.003,
-    accentColor: '#fbbf24', // amber-400
-    bgImage: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?q=80&w=1000&auto=format&fit=crop' // Desert
+    accentColor: '#fbbf24',
+    bgImage: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?q=80&w=1000&auto=format&fit=crop' // Pyramids
   },
   {
     id: 'neon',
-    name: 'Neon Cyberway',
-    description: 'Futuristic grid with extreme speeds.',
-    bgColor: '#020617', // slate-950
-    roadColor: '#0f172a', // slate-900
-    laneColor: '#22d3ee', // cyan-400
-    edgeColor: '#818cf8', // indigo-400
-    obstacleColor: '#f472b6', // pink-400
+    name: 'الساحل الشمالي',
+    description: 'طريق الساحل بالليل مع أنوار الحفلات.',
+    bgColor: '#020617',
+    roadColor: '#0f172a',
+    laneColor: '#22d3ee',
+    edgeColor: '#818cf8',
+    obstacleColor: '#f472b6',
     initialSpeed: 14,
     speedIncrement: 0.004,
-    accentColor: '#a855f7', // purple-500
-    bgImage: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=1000&auto=format&fit=crop' // Cyberpunk/Neon
+    accentColor: '#a855f7',
+    bgImage: 'https://images.unsplash.com/photo-1568051243851-f9b136146e97?q=80&w=1000&auto=format&fit=crop' // Alexandria/Coast
   }
 ];
 
@@ -570,23 +570,23 @@ export default function App() {
         </div>
 
         {/* HUD */}
-        <div className="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-none">
+        <div className="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-none" dir="rtl">
           <div className="bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-            <p className="text-xs uppercase tracking-widest text-zinc-400 font-bold">Score</p>
+            <p className="text-xs uppercase tracking-widest text-zinc-400 font-bold">النتيجة</p>
             <p className="text-xl font-mono font-bold" style={{ color: selectedTrack.accentColor }}>{score.toLocaleString()}</p>
           </div>
           <div className="bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-right">
-            <p className="text-xs uppercase tracking-widest text-zinc-400 font-bold">Best</p>
+            <p className="text-xs uppercase tracking-widest text-zinc-400 font-bold">أعلى نتيجة</p>
             <p className="text-xl font-mono font-bold text-emerald-400">{highScore.toLocaleString()}</p>
           </div>
         </div>
 
         {/* Speed Indicator */}
         {gameState === 'PLAYING' && (
-          <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 flex items-center gap-2">
+          <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 flex items-center gap-2" dir="rtl">
             <Zap className="w-3 h-3 text-yellow-400 fill-yellow-400" />
             <span className="text-[10px] font-mono font-bold uppercase tracking-tighter">
-              Speed: {(speed * 10).toFixed(1)} km/h
+              السرعة: {(speed * 10).toFixed(1)} كم/س
             </span>
           </div>
         )}
@@ -606,10 +606,10 @@ export default function App() {
                 className="mb-6"
               >
                 <h1 className="text-5xl font-game text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-500 mb-2 tracking-tighter">
-                  TURBO<br/>RACER
+                  صاروخ<br/>الطريق
                 </h1>
                 <p className="text-zinc-400 text-[10px] uppercase tracking-widest font-bold">
-                  Select Your Track
+                  اختار طريقك يا بطل
                 </p>
               </motion.div>
 
@@ -643,7 +643,7 @@ export default function App() {
                   style={{ backgroundColor: selectedTrack.accentColor }}
                 >
                   <Play className="w-5 h-5 fill-current" />
-                  START RACE
+                  دّوس بنزين!
                 </button>
 
                 <button
@@ -651,18 +651,18 @@ export default function App() {
                   className="px-6 py-4 bg-zinc-800 hover:bg-zinc-700 text-white rounded-full font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-3 border border-white/10"
                 >
                   <Settings className="w-5 h-5" />
-                  GARAGE
+                  الورشة
                 </button>
               </div>
 
-              <div className="mt-12 grid grid-cols-2 gap-4 text-[10px] text-zinc-500 font-bold tracking-widest uppercase">
+              <div className="mt-12 grid grid-cols-2 gap-4 text-[10px] text-zinc-500 font-bold tracking-widest uppercase" dir="rtl">
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-8 h-8 border border-zinc-700 rounded flex items-center justify-center">A</div>
-                  <span>LEFT</span>
+                  <span>يسار</span>
                 </div>
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-8 h-8 border border-zinc-700 rounded flex items-center justify-center">D</div>
-                  <span>RIGHT</span>
+                  <span>يمين</span>
                 </div>
               </div>
             </motion.div>
@@ -675,52 +675,52 @@ export default function App() {
               exit={{ opacity: 0, x: -100 }}
               className="absolute inset-0 bg-zinc-950 flex flex-col p-6 overflow-y-auto"
             >
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-4 mb-6" dir="rtl">
                 <button 
                   onClick={handleBackToStart}
                   className="p-2 hover:bg-white/10 rounded-full transition-colors"
                 >
-                  <ChevronLeft className="w-6 h-6" />
+                  <ChevronLeft className="w-6 h-6 rotate-180" />
                 </button>
-                <h2 className="text-xl font-game uppercase tracking-tighter">Garage</h2>
+                <h2 className="text-xl font-game uppercase tracking-tighter">الورشة</h2>
               </div>
 
-              <div className="space-y-8">
+              <div className="space-y-8" dir="rtl">
                 {/* Model Section */}
                 <section>
                   <div className="flex items-center gap-2 mb-4 text-zinc-400">
                     <ShieldCheck className="w-4 h-4" />
-                    <h3 className="text-xs font-bold uppercase tracking-widest">Car Model</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-widest">نوع العربية</h3>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => handleCustomizationChange({ model: 'classic' })}
-                      className={`p-4 rounded-xl border-2 transition-all text-left flex flex-col gap-1 ${
+                      className={`p-4 rounded-xl border-2 transition-all text-right flex flex-col gap-1 ${
                         customization.model === 'classic' 
                           ? 'border-white bg-white/10' 
                           : 'border-white/5 bg-black/20'
                       }`}
                     >
-                      <span className="text-xs font-game text-white">Classic</span>
-                      <p className="text-[9px] text-zinc-500">Standard Racer</p>
+                      <span className="text-xs font-game text-white">فيات 128</span>
+                      <p className="text-[9px] text-zinc-500">الوحش المصري</p>
                     </button>
                     <button
                       onClick={() => handleCustomizationChange({ model: 'bmw' })}
-                      className={`p-4 rounded-xl border-2 transition-all text-left flex flex-col gap-1 ${
+                      className={`p-4 rounded-xl border-2 transition-all text-right flex flex-col gap-1 ${
                         customization.model === 'bmw' 
                           ? 'border-blue-500 bg-blue-500/10' 
                           : 'border-white/5 bg-black/20'
                       }`}
                     >
                       <div className="flex justify-between items-center">
-                        <span className="text-xs font-game text-white italic">M-SERIES</span>
+                        <span className="text-xs font-game text-white italic">ميكروباص</span>
                         <div className="flex gap-0.5">
                           <div className="w-1 h-3 bg-blue-500" />
                           <div className="w-1 h-3 bg-blue-800" />
                           <div className="w-1 h-3 bg-red-600" />
                         </div>
                       </div>
-                      <p className="text-[9px] text-zinc-500">BMW Performance Style</p>
+                      <p className="text-[9px] text-zinc-500">طيارة على الطريق</p>
                     </button>
                   </div>
                 </section>
@@ -729,7 +729,7 @@ export default function App() {
                 <section>
                   <div className="flex items-center gap-2 mb-4 text-zinc-400">
                     <Palette className="w-4 h-4" />
-                    <h3 className="text-xs font-bold uppercase tracking-widest">Paint Job</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-widest">طلاء السيارة</h3>
                   </div>
                   <div className="grid grid-cols-5 gap-3">
                     {['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#ffffff', '#000000', '#fbbf24', '#22d3ee'].map(color => (
@@ -749,20 +749,20 @@ export default function App() {
                 <section>
                   <div className="flex items-center gap-2 mb-4 text-zinc-400">
                     <Settings className="w-4 h-4" />
-                    <h3 className="text-xs font-bold uppercase tracking-widest">Decals</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-widest">الملصقات</h3>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    {(['none', 'stripes', 'flames', 'star'] as const).map(decal => (
+                    {([['none', 'بدون'], ['stripes', 'خطوط'], ['flames', 'لهب'], ['star', 'نجمة']] as const).map(([id, label]) => (
                       <button
-                        key={decal}
-                        onClick={() => handleCustomizationChange({ decal })}
+                        key={id}
+                        onClick={() => handleCustomizationChange({ decal: id as any })}
                         className={`p-3 rounded-xl border-2 transition-all text-xs font-bold uppercase ${
-                          customization.decal === decal 
+                          customization.decal === id 
                             ? 'border-white bg-white/10' 
                             : 'border-white/5 bg-black/20'
                         }`}
                       >
-                        {decal}
+                        {label}
                       </button>
                     ))}
                   </div>
@@ -772,13 +772,13 @@ export default function App() {
                 <section>
                   <div className="flex items-center gap-2 mb-4 text-zinc-400">
                     <Gauge className="w-4 h-4" />
-                    <h3 className="text-xs font-bold uppercase tracking-widest">Performance</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-widest">الأداء</h3>
                   </div>
                   <div className="space-y-4">
                     <div className="bg-black/40 p-4 rounded-2xl border border-white/5">
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-xs font-bold uppercase tracking-widest">Engine (Speed)</span>
-                        <span className="text-blue-400 font-mono text-sm">Lv.{customization.upgrades.engine}</span>
+                        <span className="text-xs font-bold uppercase tracking-widest">المحرك (السرعة)</span>
+                        <span className="text-blue-400 font-mono text-sm">مستوى {customization.upgrades.engine}</span>
                       </div>
                       <div className="flex gap-1 mb-3">
                         {[1, 2, 3].map(lv => (
@@ -792,14 +792,14 @@ export default function App() {
                         })}
                         className="w-full py-2 bg-blue-600/20 hover:bg-blue-600/40 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-[10px] font-bold uppercase tracking-widest transition-colors"
                       >
-                        {customization.upgrades.engine >= 3 ? 'Maxed Out' : 'Upgrade Engine'}
+                        {customization.upgrades.engine >= 3 ? 'أقصى مستوى' : 'ترقية المحرك'}
                       </button>
                     </div>
 
                     <div className="bg-black/40 p-4 rounded-2xl border border-white/5">
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-xs font-bold uppercase tracking-widest">Tires (Handling)</span>
-                        <span className="text-emerald-400 font-mono text-sm">Lv.{customization.upgrades.tires}</span>
+                        <span className="text-xs font-bold uppercase tracking-widest">الإطارات (الثبات)</span>
+                        <span className="text-emerald-400 font-mono text-sm">مستوى {customization.upgrades.tires}</span>
                       </div>
                       <div className="flex gap-1 mb-3">
                         {[1, 2, 3].map(lv => (
@@ -813,7 +813,7 @@ export default function App() {
                         })}
                         className="w-full py-2 bg-emerald-600/20 hover:bg-emerald-600/40 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-[10px] font-bold uppercase tracking-widest transition-colors"
                       >
-                        {customization.upgrades.tires >= 3 ? 'Maxed Out' : 'Upgrade Tires'}
+                        {customization.upgrades.tires >= 3 ? 'أقصى مستوى' : 'ترقية الإطارات'}
                       </button>
                     </div>
                   </div>
@@ -827,16 +827,17 @@ export default function App() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="absolute inset-0 bg-red-950/90 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center"
+              dir="rtl"
             >
               <AlertTriangle className="w-16 h-16 text-red-500 mb-4 animate-pulse" />
-              <h2 className="text-4xl font-game text-white mb-2">CRASHED!</h2>
+              <h2 className="text-4xl font-game text-white mb-2">لبست في الحيط!</h2>
               
               <div className="my-8 space-y-2">
-                <p className="text-zinc-400 text-xs uppercase tracking-widest font-bold">Final Score</p>
+                <p className="text-zinc-400 text-xs uppercase tracking-widest font-bold">لميت كام نقطة؟</p>
                 <p className="text-5xl font-mono font-black text-white">{score.toLocaleString()}</p>
                 {score >= highScore && score > 0 && (
                   <p className="text-emerald-400 text-xs font-bold flex items-center justify-center gap-1">
-                    <Trophy className="w-3 h-3" /> NEW HIGH SCORE!
+                    <Trophy className="w-3 h-3" /> عاش يا وحش.. رقم قياسي!
                   </p>
                 )}
               </div>
@@ -846,17 +847,17 @@ export default function App() {
                 className="px-8 py-4 bg-white text-red-950 rounded-full font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-3 shadow-xl"
               >
                 <RotateCcw className="w-5 h-5" />
-                TRY AGAIN
+                جرب تاني يا بطل
               </button>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      <footer className="mt-8 text-zinc-600 text-[10px] font-bold tracking-widest uppercase flex items-center gap-4">
-        <span>Use Arrow Keys or A/D to steer</span>
+      <footer className="mt-8 text-zinc-600 text-[10px] font-bold tracking-widest uppercase flex items-center gap-4" dir="rtl">
+        <span>استخدم الأسهم عشان تحود يمين وشمال</span>
         <span className="w-1 h-1 bg-zinc-800 rounded-full" />
-        <span>Built with Canvas & React</span>
+        <span>صُنع بحب في مصر (React & Canvas)</span>
       </footer>
     </div>
   );

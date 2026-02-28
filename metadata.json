@@ -1,5 +1,5 @@
 {
-  "name": "Turbo Racer",
-  "description": "A fast-paced 2D car racing game built with React and HTML5 Canvas.",
+  "name": "توربو ريسر",
+  "description": "لعبة سباق سيارات ثنائية الأبعاد سريعة الوتيرة مبنية باستخدام React و HTML5 Canvas.",
   "requestFramePermissions": []
 }
